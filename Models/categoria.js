@@ -12,7 +12,7 @@ const Categoria = new Schema({
     },
     data: {
         type: Date,
-        require: Date.now()
+        default: Date.now()
     }
 })
 
