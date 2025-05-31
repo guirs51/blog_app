@@ -1,19 +1,19 @@
 const mongoose = require("mongoose");
-const Schema = mongoose.Schema
+const Schema = mongoose.Schema;
 
 const Categoria = new Schema({
     nome: {
         type: String,
-        require: true
+        required: true
     },
     slug: {
         type: String,
-        require: true
+        required: true
     },
     data: {
         type: Date,
         default: Date.now()
     }
-})
+});
 
-mongoose.model('categoria', Categoria)
+mongoose.model('categorias', Categoria);
