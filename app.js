@@ -6,15 +6,34 @@ const path = require('path');
 const app = express();
 const admin = require("./routes/admin");
 const mongoose = require('mongoose');
+const session = require('express-session');
+const flash = require('connect-flash');
 
 // Configurações
+
+//session
+app.use(session({
+    secret: "blogapp",
+    resave: true,
+    saveUninitialized: true
+}))
+
+app.use(flash());
+
+//Middleware
+app.use((req, res, next) => {
+    res.locals.success_msg = req.flash("seccess_msg");
+    res.locals.err_msg = req.flash("err_msg");
+    next();
+})
+
 // Template Engine
 app.engine('handlebars', handlebars.engine({
     defaultLayout: 'main',
     runtimeOptions: {
         allowProtoPropertiesByDefault: true,
         allowProtoMethodsByDefault: true
-    }   
+    }
 }));
 app.set('view engine', 'handlebars');
 app.set('views', path.join(__dirname, 'view'));
@@ -29,11 +48,11 @@ mongoose.connect("mongodb://localhost/blogapp").then(() => {
 })
 
 // Body parser
-app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 // Arquivos estáticos (descomente se necessário)
- app.use(express.static(path.join(__dirname, "public")));
+app.use(express.static(path.join(__dirname, "public")));
 
 // Rotas
 app.use('/admin', admin);
