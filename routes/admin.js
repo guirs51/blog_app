@@ -107,6 +107,18 @@ router.post('/categorias/deletar', (req, res) => {
         req.flash("err_msg", "Erro ao deletar categoria!!");
         res.redirect("/admin/categorias")
     })
+});
+
+router.get("/postagens", (req, res) => {
+    res.render("admin/postagens");
+});
+
+router.get("/postagens/add", (req, res) => {
+    Categoria.find().then((categorias) => {
+        res.render("admin/addpostagem", { categorias: categorias });
+    }).catch((err) =>{
+        req.flash("err_msg", "Erro ao criar Categoria");
+    })
 })
 
 router.get('/test-flash', (req, res) => {
