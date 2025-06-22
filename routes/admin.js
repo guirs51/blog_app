@@ -1,5 +1,5 @@
 const { text } = require("body-parser");
-const { render } = require("ejs");
+const { render, clearCache } = require("ejs");
 const express = require("express");
 const router = express.Router();
 const mongoose = require("mongoose");
@@ -113,7 +113,12 @@ router.post('/categorias/deletar', (req, res) => {
 });
 
 router.get("/postagens", (req, res) => {
-    res.render("admin/postagens");
+    Postagem.find().populate("categoria").sort("desc").then((postagens) => {
+        res.render("admin/postagens", { postagens: postagens });
+    }).catch((err) => {
+        req.flash("err_msg", "houve um erro ao listar postagem");
+        res.redirect("/admin");
+    })
 });
 
 router.get("/postagens/add", (req, res) => {
