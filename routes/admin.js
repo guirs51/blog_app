@@ -180,4 +180,50 @@ router.get('/test-flash', (req, res) => {
     res.redirect('/admin/categorias');
 });
 
+router.get("/postagens/edit/:id", (req, res) => {
+    Postagem.findOne({ _id: req.params.id }).then((postagens) => {
+        Categoria.find().then((categorias) => {
+            res.render("admin/editpostagens", { categorias: categorias, postagens: postagens });
+        }).catch((err) => {
+            req.flash("err_msg", "houve uma erro ao listar as categorais")
+            res.redirect("admin/postagens")
+        })
+    }).catch((err) => {
+        req.flash("err_msg", "houve um erro ao editar postagem")
+        res.redirect("admin/postagens")
+    })
+})
+
+router.post("/postagem/edit", (req, res) => {
+
+    Postagem.findOne({ _id: req.body.id }).then((postagens) => {
+        postagens.titulo = req.body.titulo
+        postagens.slug = req.body.slug
+        postagens.conteudo = req.body.conteudo
+        postagens.descricao = req.body.descricao
+        postagens.categoria = req.body.categoria
+
+        postagens.save().then(() => {
+            req.flash("success_msg", "postagem editada com sucesso");
+            res.redirect("/admin/postagens");
+        }).catch((err) => {
+            req.flash("err_msg", "erro ao atualizar postagem")
+            res.redirect("/admin/postagens")
+        })
+    }).catch((err) => {
+        console.log(err)
+        req.flash("err_msg", "erro ao editar postagem")
+        res.redirect("/admin/postagens")
+    })
+})
+
+router.get("/postagem/deletar/:id", (req, res) => {
+    Postagem.deleteOne({ _id: req.params.id }).then(() => {
+        req.flash("success_msg", "postagem deletada com sucesso")
+        res.redirect("/admin/postagens");
+    }).catch((err) => {
+        req.flash("err_msg", "houve uma erro interno");
+    })
+})
+
 module.exports = router

@@ -6,9 +6,13 @@
 <div class="card mt-5">
     <div class="card-body">
         <h4>Titulo: {{titulo}}</h4>
-        <p>Descrição: {{descricao}}</p>
-        <small>Data: {{data}}</small> <br>
-        <small>Categoria: {{categoria.nome}}</small>
+        <h6>{{slug}}</h3>
+            <h6>Descrição: {{descricao}}</h6>
+            <p>Conteudo:{{conteudo}}</p>
+            <small>Data: {{data}}</small> <br>
+            <small>Categoria: {{categoria.nome}}</small> <br>
+            <a href="/admin/postagens/edit/{{_id}}"><button class="btn btn-success mt-2">Editar postagem</button></a>
+            <a href="/admin/postagem/deletar/{{_id}}"><button class="btn btn-danger mt-2">Deletar postagem</button></a>
     </div>
 </div>
 {{else}}
