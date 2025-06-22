@@ -1,9 +1,12 @@
+const { text } = require("body-parser");
 const { render } = require("ejs");
 const express = require("express");
 const router = express.Router();
 const mongoose = require("mongoose");
 require("../Models/categoria");
 const Categoria = mongoose.model("categorias");
+require("../Models/post");
+const Postagem = mongoose.model("postagens");
 
 router.get('/', (req, res) => {
     res.render('admin/index');
@@ -116,9 +119,54 @@ router.get("/postagens", (req, res) => {
 router.get("/postagens/add", (req, res) => {
     Categoria.find().then((categorias) => {
         res.render("admin/addpostagem", { categorias: categorias });
-    }).catch((err) =>{
+    }).catch((err) => {
         req.flash("err_msg", "Erro ao criar Categoria");
     })
+})
+
+router.post("/postagem/nova", (req, res) => {
+    let erros = []
+
+    if (req.body.categoria === "0") {
+        erros.push({ texto: "categoria invalida, registre uma categoria" })
+    }
+
+    if (!req.body.slug || typeof req.body.slug === undefined || req.body.slug === null) {
+        erros.push({ texto: "Slug inválido" });
+    }
+
+    if (!req.body.descricao || typeof req.body.descricao === undefined || req.body.descricao === null) {
+        erros.push({ texto: "descricao não pode ser vazia" });
+    }
+
+    if (!req.body.conteudo || typeof req.body.conteudo === undefined || req.body.conteudo === null) {
+        erros.push({ texto: "conteudo não pode ser invalido" });
+    }
+
+    if (!req.body.titulo || typeof req.body.titulo === undefined || req.body.conteudo === null) {
+        erros.push({ texto: "titulo não pode ser vazio" });
+    }
+
+    if (erros.length > 0) {
+        res.render("admin/addpostagens", { erros: erros })
+    } else {
+        const novaPostagem = {
+            titulo: req.body.titulo,
+            slug: req.body.slug,
+            descricao: req.body.descricao,
+            conteudo: req.body.conteudo,
+            categoria: req.body.categoria
+        }
+
+        new Postagem(novaPostagem).save().then(() => {
+            req.flash("success_msg", "Postagem criada com sucesso");
+            res.redirect("/admin/postagens");
+        }).catch((err) => {
+            req.flash("err_msg", "houve erro durante o carregamento da postagem");
+            res.redirect("/admin/postagens");
+        })
+
+    }
 })
 
 router.get('/test-flash', (req, res) => {
