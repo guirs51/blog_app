@@ -8,6 +8,9 @@ const admin = require("./routes/admin");
 const mongoose = require('mongoose');
 const session = require('express-session');
 const flash = require('connect-flash');
+const { render } = require('ejs');
+require("./Models/post");
+const Postagem = mongoose.model("postagens");
 
 // Configurações
 
@@ -55,6 +58,15 @@ app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, "public")));
 
 // Rotas
+app.get("/" , (req, res) => {
+    Postagem.find().populate("categoria").sort({data: "desc"}).then((postagens) => {
+        res.render("index", {postagens: postagens});
+    }).catch((err) => {
+        req.flash("err_msg", "Houve um erro ao carregar as postagens");
+        res.redirect("/404");
+    });
+})
+
 app.use('/admin', admin);
 
 // Rota 404 (opcional)

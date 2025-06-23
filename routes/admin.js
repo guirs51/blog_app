@@ -8,9 +8,7 @@ const Categoria = mongoose.model("categorias");
 require("../Models/post");
 const Postagem = mongoose.model("postagens");
 
-router.get('/', (req, res) => {
-    res.render('admin/index');
-})
+
 
 router.get('/categorias', (req, res) => {
     Categoria.find().sort({ data: "desc" }).then((categorias) => {
