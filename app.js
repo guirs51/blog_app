@@ -13,6 +13,7 @@ require("./Models/post");
 const Postagem = mongoose.model("postagens");
 require("./Models/categoria")
 const Categorias = mongoose.model("categorias");
+const usuarios = require("./routes/usuario");
 
 // Configurações
 
@@ -116,11 +117,13 @@ app.get("/categorias/:slug", (req, res) => {
 })
 
 app.use('/admin', admin);
+app.use('/usuario', usuarios)
 
 // Rota 404 (opcional)
 app.use((req, res) => {
     res.status(404).send('Página não encontrada');
 });
+
 
 // Tratamento de erros (opcional)
 app.use((err, req, res, next) => {
