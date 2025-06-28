@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 require("../Models/usuario");
 const Usuario = mongoose.model("usuario");
 const bcrypt = require("bcryptjs");
+const passport = require("passport")
 
 router.get("/registro", (req, res) => {
     res.render("usuarios/registro")
@@ -30,7 +31,7 @@ router.post("/registro", (req, res) => {
 
     if (req.body.senha !== req.body.senha2) {
         erros.push({ texto: "Sennhas diferentes" });
-        console.log(req.body.senha , req.body.senha2);
+        console.log(req.body.senha, req.body.senha2);
     }
 
     if (erros.length > 0) {
@@ -71,12 +72,17 @@ router.post("/registro", (req, res) => {
 })
 
 
-router.get("/login" , (req, res) => {
+router.get("/login", (req, res) => {
     res.render("usuarios/login");
 })
 
-
-
+router.post("/login", (req, res, next) => {
+    passport.authenticate("local", {
+        successRedirect: "/",
+        failureRedirect: "/usuario/login",
+        failureFlash: true
+    })(req, res, next);
+});
 
 
 module.exports = router

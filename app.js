@@ -11,12 +11,13 @@ const flash = require('connect-flash');
 const { render } = require('ejs');
 require("./Models/post");
 const Postagem = mongoose.model("postagens");
-require("./Models/categoria")
+require("./Models/categoria");
 const Categorias = mongoose.model("categorias");
 const usuarios = require("./routes/usuario");
+const passport = require('passport');
+require("./config/auth")(passport);
 
 // Configurações
-
 //session
 app.use(session({
     secret: "blogapp",
@@ -24,14 +25,21 @@ app.use(session({
     saveUninitialized: true
 }))
 
+app.use(passport.initialize())
+app.use(passport.session())
+
 app.use(flash());
 
 //Middleware
+// Middleware
 app.use((req, res, next) => {
-    res.locals.success_msg = req.flash("seccess_msg");
+    res.locals.success_msg = req.flash("success_msg");
     res.locals.err_msg = req.flash("err_msg");
+    res.locals.error = req.flash("error"); // Para mensagens do Passport
+    res.locals.success = req.flash("success"); // Para mensagens de sucesso do Passport
+    res.locals.user = req.user || null; // Adicione isso também para ter acesso ao usuário autenticado
     next();
-})
+});
 
 // Template Engine
 app.engine('handlebars', handlebars.engine({

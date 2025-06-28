@@ -4,16 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Blog Node.js</title>
-    <!-- Bootstrap CSS via CDN -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
     {{>_navbar}}
     <div class="container-sm"><br>
+    {{#if error}}
+        <div class="alert alert-danger">{{error}}</div>
+    {{/if}}
+    
+    {{#if success}}
+        <div class="alert alert-success">{{success}}</div>
+    {{/if}}
+    
     {{>_msg}}
-    {{{body}}} <!-- ✅ Correto: três chaves -->
+    {{{body}}}
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"></script>
 </body>
-<!-- Bootstrap JS (já incluso no seu código) -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"></script>
 </html>
