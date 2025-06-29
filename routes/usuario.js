@@ -84,5 +84,22 @@ router.post("/login", (req, res, next) => {
     })(req, res, next);
 });
 
+router.get("/logout", async (req, res, next) => {
+    try {
+        await new Promise((resolve, reject) => {
+            req.logout(function(err) {
+                if (err) return reject(err);
+                req.flash("success_msg", "Deslogado com sucesso");
+                resolve();
+            });
+        });
+        res.redirect("/");
+    } catch (err) {
+        console.error("Erro ao fazer logout:", err);
+        req.flash("err_msg", "Erro ao deslogar");
+        res.redirect("/");
+    }
+});
+
 
 module.exports = router
